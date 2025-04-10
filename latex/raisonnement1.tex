@@ -1,0 +1,128 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath, amssymb, amsthm}
+
+% Title and author
+\title{Mathematical Reasoning Notes}
+\author{Mohamad SAMMAN}
+\date{March 2025}
+
+% Theorem, Definition, and Proof environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\begin{document}
+
+\maketitle
+
+\section{Problème de Contrôle Non Linéaire Paramétré et Observé}
+
+Considérons un système dynamique non linéaire paramétré de la forme :
+\begin{equation}
+    \begin{cases}
+        \dot{x} = f(x, u, \theta), \\
+        y = h(x),
+    \end{cases}
+\end{equation}
+avec $ x(0) $ fixé et où :
+\begin{itemize}
+    \item $ x \in \mathbb{R}^n $ est l'état du système,
+    \item $ u \in \mathbb{R}^m $ est l'entrée de commande,
+    \item $ \theta \in \mathbb{R}^p $ est un paramètre inconnu,
+    \item $ y \in \mathbb{R}^q $ est la sortie idéale supposée connue,
+    \item $ f $ et $ h $ sont des fonctions différentiables appropriées.
+\end{itemize}
+
+Cependant, dans un contexte réel, la sortie mesurée est affectée par un bruit $ w(t) $, ce qui donne :
+\begin{equation}
+    y_{\text{mes}} = h(x(t)) + w(t),
+\end{equation}
+où $ w(t) $ représente un bruit d'observation.
+
+\section{Sensibilité aux Paramètres}
+
+Nous définissons la sensibilité du système par rapport aux paramètres $\theta$ à travers la variable $ x_{\theta} = \dfrac{\partial x}{\partial \theta} $, qui satisfait le système :
+\begin{equation}
+    \begin{cases}
+        \dot{x}_{\theta} = \frac{\partial f}{\partial x} (x, u, \theta) x_{\theta} + \frac{\partial f}{\partial \theta} (x, u, \theta), \\
+        y_{\theta} = \frac{\partial h}{\partial \theta} (x) = \frac{\partial h}{\partial x} (x) x_{\theta}.
+    \end{cases}
+\end{equation}
+
+\begin{remark}
+    Ici, $ y_{\theta} = \frac{\partial y}{\partial \theta} $ représente la sensibilité de la sortie par rapport aux paramètres.
+\end{remark}
+
+\section{Quantification de l'écart entre \( y \) et \( y_{\text{mes}} \)}
+
+Nous souhaitons quantifier l'écart entre la sortie idéale \( y(t) \) et la sortie mesurée \( y_{\text{mes}}(t) \) à travers :
+
+\begin{equation}
+J(\theta, \theta^\star) = \int_0^T \left| y(t) - y_{\text{mes}}(t) \right|^2 dt
+\end{equation}
+
+où :
+\begin{itemize}
+    \item \( y(t) \) est la "vraie" sortie du système,
+    \item \( y_{\text{mes}}(t) = h(x(t)) + w(t) \) est la sortie mesurée, affectée par le bruit \( w(t) \).
+\end{itemize}
+\\
+Notons $y\star := h(x)$ alors \( J(\theta, \theta^\star) \) devient : 
+\begin{equation}
+J(\theta, \theta^\star) = \int_0^T \left| y(t) - y^\star(t) - w(t) \right|^2 dt
+\label{Jdep}
+\end{equation}
+\\
+En développant le carré et en utilisant la linéarité de l'intégrale:
+\begin{equation}
+J(\theta, \theta^\star) = \int_0^T |y(t) - y^\star(t)|^2 dt  
+- 2 \int_0^T  (y(t) - y^\star(t))^T w(t) dt  
++ \int_0^T |w(t)|^2 dt
+\label{Jdev}
+\end{equation}
+\\
+Supposons que la différence entre les paramètres estimés et les vrais paramètres \( \theta - \theta^\star \) est petite. Nous pouvons alors développer \( y - y^\star \) en série de Taylor autour de \( \theta^\star \), ce qui donne l'approximation suivante :
+
+\begin{equation}
+y - y^\star \approx (\theta - \theta^\star)^T y_{\theta^\star} + \frac{1}{2} (\theta - \theta^\star)^T R (\theta - \theta^\star)
+\end{equation}
+
+où :
+\begin{itemize}
+    \item \(  y_{\theta^\star} = \frac{\partial y}{\partial \theta} |_{ \theta^\star} \) représente la sensibilité de la sortie par rapport aux paramètres,
+    \item \( R \) est une matrice qui modélise un terme quadratique,
+\end{itemize}
+\\
+Nous pouvons négliger les terme d'ordre 2 et substituer dans (\ref{Jdev}) :
+\begin{equation}
+\begin{aligned}
+J(\theta, \theta^\star) = & (\theta - \theta^\star)^T \left( \int_0^T y_{\theta^\star}(t) y_{\theta^\star}(t)^T dt \right) (\theta - \theta^\star) \\
+& \quad + 2 \left(\int_0^T w(t)^T y_{\theta^\star}(t) dt \right) (\theta - \theta^\star) \\
+& \quad + \int_0^T |w(t)|^2 dt + R'
+\end{aligned}
+\end{equation}
+\\
+Notons: $M(\theta^\star) = \int_0^T y_{\theta^\star}(t) y_{\theta^\star}(t)^T dt$ et $V(\theta^\star) = \int_0^T w(t)^T y_{\theta^\star}(t) dt.$
+\end{equation}
+Alors on obtient:
+\begin{equation}
+\begin{aligned}
+J(\theta, \theta^\star) = & (\theta - \theta^\star)^T M(\theta^\star) (\theta - \theta^\star) + 2 V(\theta^\star) (\theta - \theta^\star) + \int_0^T |w(t)|^2 dt + R'.
+\end{aligned}
+\end{equation}
+\\
+Le minimum de $J$ est atteint pour $\theta$ qui vérifie:
+\begin{equation}
+M(\theta^\star)(\theta - \theta^\star) + V(\theta^\star) = \theta
+\end{equation} 
+\\
+C'est à dire en $\theta$ qui vérifie:
+\begin{equation}
+\theta = \theta^\star - M^{-1}(\theta^\star)V(\theta^\star)
+\end{equation}
+
+\end{document}

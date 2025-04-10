@@ -1,0 +1,106 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath,a4wide}  % for mathematical expressions
+
+\begin{document}
+
+\title{1D Mahera}
+\author{Mohamad Samman}
+\date{24 March 2025}
+\maketitle
+
+\section{Introduction}
+
+In this article, we will discuss an example involving one parameter.
+
+\section{Example with One Parameter}
+Consider the following system:
+\begin{equation}
+\dot{x} = -x + \theta \cdot u
+\end{equation}
+\begin{equation}
+y = x + v
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item \( \dot{x} \) represents the time derivative of \( x \),
+    \item \( \theta \) is a constant parameter,
+    \item \( u \) is an input, and
+    \item \( v \) is a gaussian white noise with \(E(v)=0\) and \(E(v(t)v(\tau))=\sigma^2\delta(t-\tau)\).
+\end{itemize}
+The Information matrix can be shown to be:
+\begin{equation}
+M = \int_0^T \frac{1}{\sigma^2} x_{\theta}^2 \, d\theta
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item \( x_{\theta} \) is the derivative of \( x \) with respect to \( \theta \),
+    \item \( T \) is the time horizon,
+    \item \( \sigma^2 \) is the variance of the noise process \( v \).
+\end{itemize}
+Let the input be energy constrained as follows:
+\begin{equation}
+    \int_0^T u^2 dt = E
+    \label{nrjconst}
+\end{equation}
+The sensitivity function $\dot{x_\theta}$ is obtained as follows:
+\begin{equation}
+  \dot{x_\theta}  = -x_\theta + u
+\end{equation}
+
+The maximization of \( M \) is subject to a constraint \eqref{nrjconst} is equivalent to the minimization of the performance index:
+\begin{equation}
+J = -\frac{1}{2} \int_0^T \dfrac{-x_\theta^2}{\sigma^2} + (u^2 - \dfrac{E}{T} )dt
+\end{equation}
+The Pontryagin Maximum Principle (PMP) gives us the Hamiltonian:
+\begin{equation}
+\mathcal{H} = \dfrac{1}{2} \left[\dfrac{-x_\theta^2}{\sigma^2} + (u^2 - \dfrac{E}{T} )\right] + \lambda[-x_\theta + u]
+\label{hamiltonian}
+\end{equation}
+Where $\lambda$ is the costate scalar\\
+\[
+    \dot{\lambda} = -\dfrac{\partial \mathcal{H}}{\partial x_\theta}
+\]
+\\
+\begin{equation}
+    \dot{\lambda} = -\lambda + \dfrac{-x_\theta}{\sigma^2}
+    \label{labdadot}
+\end{equation}
+Maximization Condition:
+\[\mathcal{H}_u=0\]
+or:
+\begin{equation}
+    u^\star = - \dfrac{1}{\mu}\lambda
+\end{equation}
+The boundary conditions are homogeneous.
+\[
+x_\theta(0)=0,\quad \lambda(T)=0
+\]
+Substituting for $u^\stqr$ in \eqref{hamiltonian}, we obtain the two-point boundary value problem:
+\begin{equation}
+    \frac{d}{dt} \left[ \begin{array}{c} x_\theta \\ \lambda \end{array} \right]
+= \left[ \begin{array}{cc} -1 & -\frac{1}{\mu} \\ \frac{1}{\sigma^2} & 1 \end{array} \right]
+\left[ \begin{array}{c} x_\theta \\ \lambda \end{array} \right]
+\label{matsys}
+\end{equation}
+Let $\Phi(T,0;\mu)$ be the transition matrix of \eqref{matsys} for a particular $\mu$
+\begin{equation}
+     \left[ \begin{array}{c} x_\theta(T) \\ \lambda(T) \end{array} \right]
+= \left[ \begin{array}{cc} \Phi_{xx}(T,0;\mu) & \Phi_{x\lambda}(T,0;\mu) \\ \Phi_{\lambda x}(T,0;\mu) & \Phi_{\lambda\lambda}(T,0;\mu) \end{array} \right]
+\left[ \begin{array}{c} x_\theta(0) \\ \lambda(0) \end{array} \right]
+\label{matexp}
+\end{equation}
+The second equation in \eqref{matexp} and the boundary conditions gives
+\begin{equation}
+    \lambda(T)= \Phi_{\lambda\lambda}(T,0;\mu)\lambda(0)=0
+    \label{eq2matexp}
+\end{equation}
+For a non trivial solution
+\begin{equation}
+    |\Phi_{\lambda\lambda}(T,0;\mu)|=0
+    \label{eveq}
+\end{equation}
+Equation \eqref{eveq} is the eigenvalue equation for the Hamiltonian system \eqref{hamiltonian}. It can be solved by a Newton-Raphson iteration.\\
+The Ricatti 
+\end{document}
